@@ -1,6 +1,67 @@
 import React from 'react'
-import { Container } from './styles'
+import { Wrapper, Container, Search, Logo, Map, CarouselTitle, Carousel } from './styles'
+import logo from '../../assets/logo.svg'
+import { useState } from 'react'
+import TextField, { HelperText, Input } from '@material/react-text-field';
+import MaterialIcon from '@material/react-material-icon';
+//import Carousel from "react-slick";
+import restaurante from '../../assets/restaurante-fake.png'
+import { Card, RestaurantCard, Modal } from '../../components'
 
-const Home = () => <Container>Hello world!</Container>
+const Home = () => {
+    const [valor, setValor] = useState()  
+    const [modalVisible, setVisible]  = useState(false)
+
+    const settings = {
+        dots: false,
+        infinite: true,
+        speed: 300,
+        slidesToShow: 4,
+        slidesToScroll: 4,
+        adaptiveHeight: true
+      }
+    
+    return (
+        <Wrapper>
+            <Container>
+                <Search >
+                    <Logo src={logo} alt="Logo Restaurante" />
+                    <TextField
+                        label='Pesquisar Restaurantes'
+                        helperText={<HelperText>Nunca exponha suas senhas...</HelperText>}
+                        outlined
+                        //onTrailingIconSelect={() => this.setState({ value: '' })}
+                        trailingIcon={<MaterialIcon role="button" icon="search" />}
+                    >                     
+                        <Input
+                            value={valor}
+                            onChange={(e) => setValor(e.currentTarget.value)} />
+                    </TextField>
+                    <CarouselTitle>Na sua Área</CarouselTitle>
+                    <Carousel {...settings}>
+                        <Card photo={restaurante} title="Um Título" />
+                        <Card photo={restaurante} title="Um Título" />
+                        <Card photo={restaurante} title="Um Título" />
+                        <Card photo={restaurante} title="Um Título" />
+                        <Card photo={restaurante} title="Um Título" />
+                        <Card photo={restaurante} title="Um Título" />
+                        <Card photo={restaurante} title="Um Título" />
+                        <Card photo={restaurante} title="Um Título" />
+                        <Card photo={restaurante} title="Um Título" />
+                        <Card photo={restaurante} title="Um Título" />
+                        <Card photo={restaurante} title="Um Título" />
+                       
+                    </Carousel>
+                    <button onClick={ () => setVisible(true)}>Abrir Modal</button>
+                </Search>
+
+                <RestaurantCard />
+            </Container>
+            <Map />
+            <Modal visible={modalVisible} 
+                    onClose={ () => setVisible(!modalVisible) } />
+        </Wrapper>
+    )
+}
 
 export default Home
