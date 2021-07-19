@@ -1,15 +1,16 @@
 import React from 'react'
-import { Wrapper, Container, Search, Logo, Map, CarouselTitle, Carousel } from './styles'
+import { Wrapper, Container, Search, Logo, CarouselTitle, Carousel } from './styles'
 import logo from '../../assets/logo.svg'
 import { useState } from 'react'
 import TextField, { HelperText, Input } from '@material/react-text-field';
 import MaterialIcon from '@material/react-material-icon';
 //import Carousel from "react-slick";
 import restaurante from '../../assets/restaurante-fake.png'
-import { Card, RestaurantCard, Modal } from '../../components'
+import { Card, RestaurantCard, Modal, Map } from '../../components'
 
 const Home = () => {
-    const [valor, setValor] = useState()  
+    const [valor, setValor] = useState('')  
+    const [query, setQuery] = useState(null)  
     const [modalVisible, setVisible]  = useState(false)
 
     const settings = {
@@ -19,7 +20,13 @@ const Home = () => {
         slidesToShow: 4,
         slidesToScroll: 4,
         adaptiveHeight: true
-      }
+    }
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            setQuery(valor)
+        }
+    }
     
     return (
         <Wrapper>
@@ -35,6 +42,7 @@ const Home = () => {
                     >                     
                         <Input
                             value={valor}
+                            onKeyPress={handleKeyPress}
                             onChange={(e) => setValor(e.currentTarget.value)} />
                     </TextField>
                     <CarouselTitle>Na sua Área</CarouselTitle>
@@ -57,7 +65,7 @@ const Home = () => {
 
                 <RestaurantCard />
             </Container>
-            <Map />
+            <Map query={query} />
             <Modal visible={modalVisible} 
                     onClose={ () => setVisible(!modalVisible) } />
         </Wrapper>
