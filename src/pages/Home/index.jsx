@@ -8,10 +8,14 @@ import MaterialIcon from '@material/react-material-icon';
 import restaurante from '../../assets/restaurante-fake.png'
 import { Card, RestaurantCard, Modal, Map } from '../../components'
 
+import { useSelector } from 'react-redux'
+
 const Home = () => {
     const [valor, setValor] = useState('')  
     const [query, setQuery] = useState(null)  
     const [modalVisible, setVisible]  = useState(false)
+    
+    const { restaurants } = useSelector((state) => state.restaurants)
 
     const settings = {
         dots: false,
@@ -47,23 +51,22 @@ const Home = () => {
                     </TextField>
                     <CarouselTitle>Na sua Área</CarouselTitle>
                     <Carousel {...settings}>
-                        <Card photo={restaurante} title="Um Título" />
-                        <Card photo={restaurante} title="Um Título" />
-                        <Card photo={restaurante} title="Um Título" />
-                        <Card photo={restaurante} title="Um Título" />
-                        <Card photo={restaurante} title="Um Título" />
-                        <Card photo={restaurante} title="Um Título" />
-                        <Card photo={restaurante} title="Um Título" />
-                        <Card photo={restaurante} title="Um Título" />
-                        <Card photo={restaurante} title="Um Título" />
-                        <Card photo={restaurante} title="Um Título" />
-                        <Card photo={restaurante} title="Um Título" />
-                       
+                        { restaurants.map((restaurant) => (
+                            <Card 
+                                title={restaurant.name}
+                                key={restaurant.place_id}
+                                photo={restaurant.photos ? restaurant.photos[0].getUrl() : restaurante} />
+                        ))}                                                                  
                     </Carousel>
-                    <button onClick={ () => setVisible(true)}>Abrir Modal</button>
+                    <button onClick={ () => setVisible(true)}>Abrir Modal</button>                    
                 </Search>
 
-                <RestaurantCard />
+                { restaurants.map((restaurant) => (
+                    <RestaurantCard key={restaurant.place_id}
+                         restaurant={restaurant} />
+                ))}
+
+                
             </Container>
             <Map query={query} />
             <Modal visible={modalVisible} 
