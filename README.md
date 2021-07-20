@@ -66,3 +66,9 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `yarn build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+
+
+# BEFORE YOU START
+After clonning the project you'll need a .env file in the root directory with the following entry:
+- REACT_APP_GOOGLE_API_KEY=[your google api key for maps and places]
