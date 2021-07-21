@@ -4,42 +4,6 @@ import { Map, GoogleApiWrapper, Marker } from 'google-maps-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setRestaurants, setRestaurant } from '../../redux/modules/restaurants'
 
-function searchByQuery(query, google, map, dispatch) {
-    const service = new google.maps.places.PlacesService(map)
-    const request = {
-        location: map.center,
-        radius: '200',
-        type: ['restaurant'],
-        query
-    }
-
-    service.textSearch(request, (result, status) => {
-        
-        if (status === google.maps.places.PlacesServiceStatus.OK) {
-            console.log('resultado searchByQuery  >>> ', result)
-            dispatch(setRestaurants(result))
-        } else {
-            console.log('Error calling searchByQuery: ', status)
-        }
-    } )
-}    
-
-function getRestaurantById(placeId, google, map, dispatch) {
-    dispatch(setRestaurant(null))
-
-    const service = new google.maps.places.PlacesService(map)
-    const request = {
-        placeId,
-        fields: ['name', 'opening_hours', 'formatted_address', 'formatted_phone_number']
-    }
-
-    service.getDetails(request, (place, status) => {
-        if (status === google.maps.places.PlacesServiceStatus.OK) {
-            dispatch(setRestaurant(place))
-        }
-    })
-}
-
 const MapContainer = ({ google, query, placeId }) => {
     const dispatch = useDispatch()
     const { restaurants } = useSelector((state) => state.restaurants)
@@ -48,18 +12,54 @@ const MapContainer = ({ google, query, placeId }) => {
 
     useEffect(() => {
         if (query) {
-            searchByQuery(query, google, map, dispatch)
+            searchByQuery(query)
         }
-    }, [query, google, map, dispatch])
+
+        function searchByQuery(query) {
+            const service = new google.maps.places.PlacesService(map)
+            const request = {
+                location: map.center,
+                radius: '200',
+                type: ['restaurant'],
+                query
+            }
+        
+            service.textSearch(request, (result, status) => {
+                
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                   // console.log('resultado searchByQuery  >>> ', result)
+                    dispatch(setRestaurants(result))
+                } else {
+                   // console.log('Error calling searchByQuery: ', status)
+                }
+            } )
+        }  
+    }, [query, dispatch, google.maps.places.PlacesService, map, google.maps.places.PlacesServiceStatus.OK])
 
     useEffect(() => {
         if (placeId) {
-           getRestaurantById(placeId, google, map, dispatch)
+           getRestaurantById(placeId)
         }
-    }, [placeId, google, map, dispatch])
 
-    
+        function getRestaurantById(placeId) {
+            dispatch(setRestaurant(null))
+        
+            const service = new google.maps.places.PlacesService(map)
+            const request = {
+                placeId,
+                fields: ['name', 'opening_hours', 'formatted_address', 'formatted_phone_number']
+            }
+        
+            service.getDetails(request, (place, status) => {
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                    dispatch(setRestaurant(place))
+                }
+            })
+        }
+    }, [placeId, dispatch, google.maps.places.PlacesService, map, google.maps.places.PlacesServiceStatus.OK])
 
+
+                  
     function searchNearby(map, center) {
         dispatch(setRestaurants([]))
 
@@ -73,15 +73,13 @@ const MapContainer = ({ google, query, placeId }) => {
         service.nearbySearch(request, (result, status) => {
             
             if (status === google.maps.places.PlacesServiceStatus.OK) {
-                console.log('resultado >>> ', result)
+               // console.log('resultado >>> ', result)
                 dispatch(setRestaurants(result))
             } else {
-                console.log('Error calling nearbySearch: ', status)
+               // console.log('Error calling nearbySearch: ', status)
             }
         } )
     }
-
-    
 
     function onMapReady(_, map) {
         setMap(map)
@@ -92,7 +90,7 @@ const MapContainer = ({ google, query, placeId }) => {
         <Map google={google}
             zoom={14}
             centerAroundCurrentLocation
-            onReady={onMapReady}
+            onReady={(_, map) => onMapReady(_, map) }
             onRecenter={() => console.log('Chamou onRecenter')}
         >
             { restaurants.map((restaurant) => (

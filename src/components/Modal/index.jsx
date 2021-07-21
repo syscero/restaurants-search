@@ -30,8 +30,6 @@ const Modal = ( { children, visible, onClose } ) => {
         e.stopPropagation()
     }
 
-
-
     return (
         <Portal>
             <Overlay onClick={onOverlayClick}>

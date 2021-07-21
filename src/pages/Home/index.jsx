@@ -2,9 +2,8 @@ import React from 'react'
 import { Wrapper, Container, Search, Logo, CarouselTitle, Carousel, ModalTitle, ModalContent } from './styles'
 import logo from '../../assets/logo.svg'
 import { useState } from 'react'
-import TextField, { HelperText, Input } from '@material/react-text-field';
+import TextField, {  Input } from '@material/react-text-field';
 import MaterialIcon from '@material/react-material-icon';
-//import Carousel from "react-slick";
 import restaurante from '../../assets/restaurante-fake.png'
 import { Card, RestaurantCard, Modal, Map, Loader, Skeleton } from '../../components'
 
@@ -45,15 +44,14 @@ const Home = () => {
                 <Search >
                     <Logo src={logo} alt="Logo Restaurante" />
                     <TextField
-                        label='Pesquisar Restaurantes'
-                        helperText={<HelperText>Nunca exponha suas senhas...</HelperText>}
+                        label='Pesquisar Restaurantes'                        
                         outlined
                         //onTrailingIconSelect={() => this.setState({ value: '' })}
                         trailingIcon={<MaterialIcon role="button" icon="search" />}
                     >                     
                         <Input
                             value={valor}
-                            onKeyPress={handleKeyPress}
+                            onKeyPress={(e) => handleKeyPress(e)}
                             onChange={(e) => setValor(e.currentTarget.value)} />
                     </TextField>
 
